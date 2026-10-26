@@ -1,69 +1,62 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from "next/link";
+import { shop, services, branches } from "@/data/shop";
+import { money } from "@/lib/money";
+
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main>
+      <section className="hero">
+        <h1>{shop.tagline}</h1>
+        <p>Pick a service, choose your barber and grab a time that is actually free. No calls, no waiting for replies.</p>
+        <div><Link href="/book" className="btn">Book a cut</Link></div>
+      </section>
+
+      <section className="section">
+        <h2>How it works</h2>
+        <div className="cards">
+          {["Choose a store and a service", "Pick your barber and a free time", "Get your confirmation and add it to your calendar"].map((t, i) => (
+            <article key={t} className="card">
+              <span className="price">0{i + 1}</span>
+              <p>{t}</p>
+            </article>
+          ))}
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className="section">
+        <h2>Services</h2>
+        <div className="cards">
+          {services.map((s) => (
+            <article key={s.id} className="card">
+              <h3>{s.name}</h3>
+              <p>{s.blurb}</p>
+              <small>{s.minutes} min</small>
+              <span className="price">{money(s.price)}</span>
+            </article>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="section">
+        <h2>Stores and hours</h2>
+        <div className="cards">
+          {branches.map((b) => (
+            <article key={b.id} className="card">
+              <h3>{b.name}</h3>
+              <p>{b.address}</p>
+            </article>
+          ))}
+          <article className="card">
+            <h3>Opening hours</h3>
+            {Object.entries(shop.hours).map(([d, h]) => (
+              <small key={d}>{DAYS[Number(d)]}: {h[0]} to {h[1]}</small>
+            ))}
+            <small>Sunday: closed</small>
+          </article>
+        </div>
+      </section>
+    </main>
   );
 }
